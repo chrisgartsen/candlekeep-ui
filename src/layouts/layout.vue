@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="hHh lpR fFf">
     <q-header elevated>
       <q-toolbar>
         <q-btn
@@ -15,7 +15,8 @@
           Quasar App
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <q-spacer></q-spacer>
+        <q-btn flat dense icon="person" to="/login" />
       </q-toolbar>
     </q-header>
 
@@ -87,6 +88,15 @@
     <q-page-container>
       <router-view />
     </q-page-container>
+
+    <q-footer class="bg-grey-8 text-white">
+      <q-toolbar>
+        <q-toolbar-title>
+          Footer
+        </q-toolbar-title>
+      </q-toolbar>
+    </q-footer>
+
   </q-layout>
 </template>
 
