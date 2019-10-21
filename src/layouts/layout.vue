@@ -89,20 +89,19 @@
       <router-view />
     </q-page-container>
 
-    <q-footer class="bg-grey-8 text-white">
-      <q-toolbar>
-        <q-toolbar-title>
-          Footer
-        </q-toolbar-title>
-      </q-toolbar>
-    </q-footer>
+    <page-footer />
 
   </q-layout>
 </template>
 
 <script>
+import pageFooter from './page-footer'
+
 export default {
-  name: 'MyLayout',
+  name: 'layout',
+  components: {
+    pageFooter
+  },
 
   data () {
     return {
