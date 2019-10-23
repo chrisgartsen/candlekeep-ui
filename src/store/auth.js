@@ -13,6 +13,9 @@ export default {
     },
     webToken(state) {
       return state.currentUser ? state.currentUser.webToken : null
+    },
+    currentUser(state) {
+      return state.currentUser
     }
   },
 
@@ -28,8 +31,7 @@ export default {
   actions: {
     async login({ commit }, credentials) {
       try {
-        const response = await Axios.post('http://localhost:3000/auth/login', { email: credentials.email, password: credentials.password })
-        console.log(response.data)
+        const response = await Axios.post('/auth/login', { email: credentials.email, password: credentials.password })
         commit('setCurrentUser', { id: response.data.id, email: credentials.email, token: response.data.token })
       } catch(err) {
         throw new Error(err.response.data.error)
