@@ -1,3 +1,5 @@
+import Axios from 'axios'
+
 export default {
   namespaced: true,
 
@@ -22,12 +24,12 @@ export default {
 
   actions: {
     async login({ commit }, credentials) {
-      console.log("Loggin in", credentials)
       try {
-        if(credentials.email == "error@error.com") throw new Error("Invalid credentials")
+        const response = await Axios.post('http://localhost:3000/auth/login', { email: credentials.email, password: credentials.password })
+        console.log("Res", response.error)
         commit('setCurrentUser', { id: '92883883', email: 'guest@guest.com' })
       } catch(err) {
-        throw new Error(err)
+        throw new Error(err.response.data.error)
       }
     },
     logout({ commit }) {

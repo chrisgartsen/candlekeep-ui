@@ -16,7 +16,7 @@
 
         <q-space />
         <q-btn v-if="!isLoggedIn" flat icon="person" to="/login" label="Login" />
-        <q-btn v-if="isLoggedIn" flat icon="exit_to_app" label="Logout" @click="logout"/>
+        <q-btn v-if="isLoggedIn" flat icon="exit_to_app" label="Logout" @click="submitLogout"/>
       </q-toolbar>
     </q-header>
 
@@ -29,7 +29,11 @@ export default {
   name: 'page-header',
   methods: {
     ...mapActions('layout', ['toggleDrawer']),
-    ...mapActions('auth', [ 'logout'])
+    ...mapActions('auth', [ 'logout']),
+    submitLogout() {
+      this.logout()
+      this.$router.push('/login')
+    }
   },
   computed: {
     ...mapGetters('auth', ['isLoggedIn'])
