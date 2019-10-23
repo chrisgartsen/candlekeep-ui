@@ -6,12 +6,17 @@ export default {
   },
 
   getters: {
-
+    isLoggedIn(state) {
+      return state.currentUser != null && state.currentUser.id != null
+    }
   },
 
   mutations: {
     setCurrentUser(state, credentials) {
       state.currentUser = { id: credentials.id, email: credentials.email }
+    },
+    clearCurrentUser(state) {
+      state.currentUser = null
     }
   },
 
@@ -24,6 +29,9 @@ export default {
       } catch(err) {
         throw new Error(err)
       }
+    },
+    logout({ commit }) {
+      commit('clearCurrentUser')
     }
   }
 

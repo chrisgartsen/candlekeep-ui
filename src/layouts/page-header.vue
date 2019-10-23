@@ -15,19 +15,24 @@
         </q-toolbar-title>
 
         <q-space />
-        <q-btn flat dense icon="person" to="/login" />
+        <q-btn v-if="!isLoggedIn" flat icon="person" to="/login" label="Login" />
+        <q-btn v-if="isLoggedIn" flat icon="exit_to_app" label="Logout" @click="logout"/>
       </q-toolbar>
     </q-header>
 
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'page-header',
   methods: {
-    ...mapActions('layout', ['toggleDrawer'])
+    ...mapActions('layout', ['toggleDrawer']),
+    ...mapActions('auth', [ 'logout'])
+  },
+  computed: {
+    ...mapGetters('auth', ['isLoggedIn'])
   }
 }
 </script>
