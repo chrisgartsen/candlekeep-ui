@@ -4,7 +4,11 @@
     <div class="row">
       <q-card class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-4 offset-lg-4 q-mt-xl">
         <q-card-section>
-          <h2 class="text-h6 text-primary">Login</h2>
+          <h2 v-if="!error" class="text-h6 text-primary">Login</h2>
+          <h2 v-if="error" class="text-h6 text-negative">Login Failed</h2>
+        </q-card-section>
+        <q-card-section>
+          <q-banner v-if="error" rounded class="text-white bg-negative">{{ error }}</q-banner>
         </q-card-section>
         <q-card-section>
           <q-form class="q-gutter-md" @submit.prevent="submitForm" > 
@@ -40,7 +44,8 @@ export default {
   data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      error: ''
     }
   },
   validations: {
@@ -67,10 +72,17 @@ export default {
   },
   methods: {
     ...mapActions('auth', ['login']),
-    submitForm() {
+    async submitForm() {
       this.$v.$touch()
       if(!this.$v.$error) {
-        this.login({ email: this.email, password: this.password })
+        try {
+          await this.login({ email: this.email, password: this.password })
+          this.$router.push('/')
+        } catch(err) {
+          this.$v.$reset()
+          this.error = err.message
+          this.password = ''
+        }
       }
     }
   }
