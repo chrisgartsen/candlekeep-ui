@@ -1,13 +1,17 @@
 <template>
   <q-page class="flex flex-center">
 
-    Main Page
-
+Token {{ webToken }}
   </q-page>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
-  name: 'PageIndex'
+  name: 'PageIndex',
+  computed: {
+    ...mapGetters('auth', ['webToken'])
+  }
 }
 </script>
