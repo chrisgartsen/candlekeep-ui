@@ -9,7 +9,8 @@ module.exports = function (ctx) {
     boot: [
       'axios',
       'vuelidate',
-      'router-auth'
+      'router-auth',
+      'auto-login'
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
