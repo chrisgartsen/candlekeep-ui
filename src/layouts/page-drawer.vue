@@ -22,9 +22,10 @@ export default {
 
   computed: {
     ...mapGetters('layout',['showDrawer']),
+    ...mapGetters('auth', ['isLoggedIn']),
     show: {
       get() {
-        return this.showDrawer
+        return this.showDrawer && this.isLoggedIn
       },
       set(newVal) {
         this.toggleDrawer()
