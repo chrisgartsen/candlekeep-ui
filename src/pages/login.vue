@@ -11,7 +11,7 @@
           <q-banner v-if="error" rounded class="text-white bg-negative">{{ error }}</q-banner>
         </q-card-section>
         <q-card-section>
-          <q-form class="q-gutter-md" @submit.prevent="submitForm" > 
+          <q-form class="q-gutter-md" @submit.prevent="submitForm" @keyup.enter="submitForm"> 
             <q-input outlined label="Email" 
                      v-model="email" 
                      @blur="$v.email.$touch" 
