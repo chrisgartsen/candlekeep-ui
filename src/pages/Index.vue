@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex flex-center">
 
-Token {{ webToken }}
+Token {{ token }}
   </q-page>
 </template>
 
@@ -11,7 +11,7 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'PageIndex',
   computed: {
-    ...mapGetters('auth', ['webToken'])
+    ...mapGetters('auth', ['token'])
   }
 }
 </script>

@@ -5,27 +5,32 @@ export default {
   namespaced: true,
 
   state: {
-    currentUser: null
+    token: null,
+    userId: null
   },
 
   getters: {
     isLoggedIn(state) {
-      return state.currentUser != null && state.currentUser.id != null
+      return state.token != null && state.userId != null
     },
-    webToken(state) {
-      return state.currentUser ? state.currentUser.webToken : null
+    token(state) {
+      return state.token
     },
-    currentUser(state) {
-      return state.currentUser
+    userId(state) {
+      return state.userId
     }
   },
 
   mutations: {
-    setCurrentUser(state, credentials) {
-      state.currentUser = { id: credentials.id, email: credentials.email, webToken: credentials.token }
+    setToken(state, token) {
+      state.token = token
     },
-    clearCurrentUser(state) {
-      state.currentUser = null
+    setUserId(state, userId) {
+      state.userId = userId
+    },
+    clearCredentials(state) {
+      state.token = null
+      state.userId = null
     }
   },
 
@@ -33,7 +38,8 @@ export default {
     async login({ commit }, credentials) {
       try {
         const response = await Axios.post('/auth/login', { email: credentials.email, password: credentials.password })
-        commit('setCurrentUser', { id: response.data.id, email: credentials.email, token: response.data.token })
+        commit('setToken', response.data.token)
+        commit('setUserId', response.data.id)
         LocalStorage.set('userId', response.data.id)
         LocalStorage.set('webToken', response.data.token)
       } catch(err) {
@@ -41,8 +47,12 @@ export default {
       }
     },
     logout({ commit }) {
-      commit('clearCurrentUser')
+      commit('clearCredentials')
       LocalStorage.clear()
+    },
+    autoLogin({commit}, credentials) {
+      commit('setToken', credentials.token)
+      commit('setUserId', credentials.userId)
     }
   }
 
