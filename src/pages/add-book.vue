@@ -12,8 +12,23 @@
         <q-card-section>
           <h2 class="text-h6 text-primary">Add Book</h2>
         </q-card-section>
+        <q-card-section>
+          <q-form class="q-gutter-md" @submit.prevent="submitForm" @keyup.enter="submitForm"> 
+
+            <q-input outlined label="ISBN" @blur="fetchISBN" v-model="ISBN">
+              <template v-slot:after>
+                <q-btn round dense flat icon="refresh" @click="fetchISBN" />
+              </template>
+            </q-input>
+
+            <q-input outlined label="Title" v-model="title" />
+
+          </q-form>
+        </q-card-section>
         <q-card-actions>
           <q-btn flat color="secondary">Reset</q-btn>
+          <q-space></q-space>
+          <q-btn flat color="primary" @click="submitForm">Submit</q-btn>
         </q-card-actions>
       </q-card>
 
@@ -23,7 +38,30 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   name: 'add-book',
+  data() {
+    return {
+      ISBN: '',
+      title: ''
+    }
+  },
+  methods: {
+    ...mapActions('isbn', ['fetchBook']),
+    submitForm() {
+      console.log("Submitting")
+    },
+    async fetchISBN() {
+      try {
+        const result = await this.fetchBook(this.ISBN)
+        console.log(result)
+        this.title = result.title
+      } catch(err) {
+        console.log(err)
+      }
+    }
+  }
 }
 </script>
