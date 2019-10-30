@@ -55,12 +55,16 @@ export default {
     },
     async fetchISBN() {
       try {
+        this.clearForm()
         const result = await this.fetchBook(this.ISBN)
         console.log(result)
         this.title = result.title
       } catch(err) {
         console.log(err)
       }
+    },
+    clearForm() {
+      this.title = ''
     }
   }
 }
