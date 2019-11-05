@@ -143,6 +143,7 @@ export default {
       this.clearForm()
     },
     clearForm() {
+      this.$v.$reset()
       this.title = ''
       this.author = ''
       this.publisher = ''
