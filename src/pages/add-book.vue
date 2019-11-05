@@ -15,18 +15,25 @@
         <q-card-section>
           <q-form class="q-gutter-md" @submit.prevent="submitForm" @keyup.enter="submitForm"> 
 
-            <q-input outlined label="ISBN" @blur="fetchISBN" v-model="ISBN">
+            <q-input outlined label="ISBN" 
+                    @blur="fetchISBN" 
+                    v-model="ISBN"
+                    :error="hasIsbnError"
+                    :error-message="isbnError">
               <template v-slot:after>
                 <q-btn round dense flat icon="refresh" @click="fetchISBN" />
               </template>
             </q-input>
 
-            <q-input outlined label="Title" v-model="title" />
-
+            <q-input outlined label="Title" 
+                     v-model="title" 
+                     @blur="$v.title.$touch"
+                     :error="$v.title.$error"
+                     :error-message="titleError"/>
           </q-form>
         </q-card-section>
         <q-card-actions>
-          <q-btn flat color="secondary">Reset</q-btn>
+          <q-btn flat color="secondary" @click="resetForm">Reset</q-btn>
           <q-space></q-space>
           <q-btn flat color="primary" @click="submitForm">Submit</q-btn>
         </q-card-actions>
@@ -39,32 +46,66 @@
 
 <script>
 import { mapActions } from 'vuex'
+import { required } from 'vuelidate/lib/validators'
 
 export default {
   name: 'add-book',
   data() {
     return {
       ISBN: '',
-      title: ''
+      isbnError: null,
+      title: '',
+      author: '',
+      publisher: ''
+    }
+  },
+  validations: {
+    title: {
+      required
+    }
+  },
+  computed: {
+    hasIsbnError() {
+      return !!this.isbnError
+    },
+    titleError() {
+      if(!this.$v.title.required) return "Field is required"
     }
   },
   methods: {
     ...mapActions('isbn', ['fetchBook']),
     submitForm() {
-      console.log("Submitting")
+      this.$v.$touch()
+      if(!this.$v.$error) {
+        console.log("Submitting")
+      }
     },
     async fetchISBN() {
-      try {
-        this.clearForm()
-        const result = await this.fetchBook(this.ISBN)
-        console.log(result)
-        this.title = result.title
-      } catch(err) {
-        console.log(err)
+      if(this.ISBN.length > 0) {
+        try {
+          this.clearForm()
+          const result = await this.fetchBook(this.ISBN)
+          this.title = result.title
+        } catch(err) {
+          if(err.status == 404 || err.status == 422) {
+            this.isbnError = 'No book found for this ISBN' 
+          } else {
+            this.isbnError = 'An error occurred while fetching ISBN data'
+          }
+        }
+      } else {
+        this.isbnError = null
       }
+    },
+    resetForm() {
+      this.ISBN = ''
+      this.clearForm()
     },
     clearForm() {
       this.title = ''
+      this.author = ''
+      this.publisher = ''
+      this.isbnError = null
     }
   }
 }

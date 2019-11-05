@@ -23,10 +23,12 @@ export default {
           console.log('Axios', result)
           resolve(result.data)
         } catch(err) {
-          reject(err.response.data.error)
+          reject(err.response)
         }
       })
     
     }
   }
 }
+
+// 9789021408644
