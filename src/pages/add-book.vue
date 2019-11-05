@@ -13,6 +13,10 @@
           <h2 class="text-h6 text-primary">Add Book</h2>
         </q-card-section>
         <q-card-section>
+
+          <q-inner-loading :showing="loadingForm">
+            <q-spinner-gears size="50px" color="primary" />
+          </q-inner-loading>
           <q-form class="q-gutter-md" @submit.prevent="submitForm" @keyup.enter="submitForm"> 
 
             <div class="row">
@@ -81,7 +85,8 @@ export default {
       genre: '',
       language: '',
       thumbnail: '',
-      description: ''
+      description: '',
+      loadingForm: false
     }
   },
   validations: {
@@ -109,6 +114,7 @@ export default {
     async fetchISBN() {
       if(this.ISBN.length > 0) {
         try {
+          this.loadingForm = true
           this.clearForm()
           const result = await this.fetchBook(this.ISBN)
           this.title = result.title
@@ -119,7 +125,9 @@ export default {
           this.language = result.language
           this.description = result.description
           this.thumbnail = result.thumbnail
+          this.loadingForm = false
         } catch(err) {
+          this.loadingForm = false
           if(err.status == 404 || err.status == 422) {
             this.isbnError = 'No book found for this ISBN' 
           } else {
