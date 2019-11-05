@@ -3,18 +3,6 @@ import Axios from 'axios'
 export default {
   namespaced: true,
 
-  state: {
-
-  },
-
-  getters: {
-
-  },
-
-  mutations: {
-
-  },
-
   actions: {
     async fetchBook({}, isbn ) {
       return new Promise(async (resolve, reject) => {
@@ -26,9 +14,12 @@ export default {
           reject(err.response)
         }
       })
-    
     }
   }
 }
 
 // 9789021408644
+
+// 9789462580701
+
+// 9789024576777

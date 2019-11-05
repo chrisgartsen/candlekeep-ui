@@ -8,28 +8,48 @@
     </q-breadcrumbs>
 
     <div class="row">
-      <q-card class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-4 offset-lg-4 q-mt-xl">
+      <q-card class="col-12 col-sm-8 offset-sm-2 col-md-8 offset-md-2 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4 q-mt-xl">
         <q-card-section>
           <h2 class="text-h6 text-primary">Add Book</h2>
         </q-card-section>
         <q-card-section>
           <q-form class="q-gutter-md" @submit.prevent="submitForm" @keyup.enter="submitForm"> 
 
-            <q-input outlined label="ISBN" 
-                    @blur="fetchISBN" 
-                    v-model="ISBN"
-                    :error="hasIsbnError"
-                    :error-message="isbnError">
-              <template v-slot:after>
-                <q-btn round dense flat icon="refresh" @click="fetchISBN" />
-              </template>
-            </q-input>
+            <div class="row">
+              <q-input outlined label="ISBN" 
+                       @blur="fetchISBN" 
+                       v-model="ISBN"
+                       :error="hasIsbnError"
+                       :error-message="isbnError"
+                       class="col-6">
+                <template v-slot:after>
+                  <q-btn round dense flat icon="refresh" @click="fetchISBN" />
+                </template>
+              </q-input>
+            </div>  
 
             <q-input outlined label="Title" 
                      v-model="title" 
                      @blur="$v.title.$touch"
                      :error="$v.title.$error"
                      :error-message="titleError"/>
+
+              <div class="row">
+                <div class="col-6 q-gutter-md">
+                  <q-input outlined label="Author" v-model="author" />
+                  <q-input outlined label="Genre" v-model="genre" />
+                  <q-input outlined label="Language" v-model="language"/>
+                </div>
+                <div class="col-5 offset-1">
+                   <q-img :src="thumbnail" style="max-height: 200px; max-width: 150px" />
+                </div>
+              </div>
+                        
+            <div class="row">
+              <q-input outlined label="Publisher" v-model="publisher" class="col-6 q-gutter-md"/>
+              <q-input outlined label="Published date" v-model="publishedDate" class="col-4 offset-1" />
+            </div>
+            <q-input outlined label="Description" v-model="description" type="textarea" />
           </q-form>
         </q-card-section>
         <q-card-actions>
@@ -56,7 +76,12 @@ export default {
       isbnError: null,
       title: '',
       author: '',
-      publisher: ''
+      publisher: '',
+      publishedDate: '',
+      genre: '',
+      language: '',
+      thumbnail: '',
+      description: ''
     }
   },
   validations: {
@@ -70,6 +95,7 @@ export default {
     },
     titleError() {
       if(!this.$v.title.required) return "Field is required"
+      return ''
     }
   },
   methods: {
@@ -86,6 +112,13 @@ export default {
           this.clearForm()
           const result = await this.fetchBook(this.ISBN)
           this.title = result.title
+          this.author = result.author.name
+          this.publisher = result.publisher.name
+          this.publishedDate = result.publishedDate
+          this.genre = result.genre.name
+          this.language = result.language
+          this.description = result.description
+          this.thumbnail = result.thumbnail
         } catch(err) {
           if(err.status == 404 || err.status == 422) {
             this.isbnError = 'No book found for this ISBN' 
@@ -105,6 +138,11 @@ export default {
       this.title = ''
       this.author = ''
       this.publisher = ''
+      this.publishedDate = ''
+      this.genre = ''
+      this.language = ''
+      this.thumbnail = ''
+      this.description = ''
       this.isbnError = null
     }
   }
