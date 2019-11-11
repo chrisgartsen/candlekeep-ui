@@ -16,7 +16,14 @@ export default {
   mutations: {
     addBook(state, book) {
       console.log("Adding book")
-      state.books.push(book)
+      return new Promise((resolve, reject) => {
+        try {
+          state.books.push(book)
+          resolve()
+        } catch(err) {
+          reject(err)
+        }
+      })
     }
   },
 

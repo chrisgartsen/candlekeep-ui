@@ -109,11 +109,16 @@ export default {
   methods: {
     ...mapActions('isbn', ['fetchBook']),
     ...mapActions('books', ['addBook']),
-    submitForm() {
+    async submitForm() {
       this.$v.$touch()
       if(!this.$v.$error) {
-        console.log("Submitting", this.bookData)
-        this.addBook(this.bookData)
+        try {
+          console.log("Submitting", this.bookData)
+          await this.addBook(this.bookData)
+          this.$router.push('/books')
+        } catch(err) {
+          console.log(err)
+        }
       }
     },
     async fetchISBN() {

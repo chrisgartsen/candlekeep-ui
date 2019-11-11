@@ -6,8 +6,8 @@
       <q-breadcrumbs-el label="Books" />
     </q-breadcrumbs>
     
-    <div>
-      {{ this.books }}
+    <div class="q-mt-xl q-mb-xl">
+      <q-table title="Books" :data="books" :columns="columns" row-key="id" />
     </div>
 
 
@@ -21,9 +21,16 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'books',
+  data() {
+    return {
+      columns: [
+        { name: 'isbn', label: 'ISBN', field: 'isbn', align: 'left' },
+        { name: 'title', label: 'Title',  field: 'title', align: 'left' }
+      ],
+    }
+  },
   async created() {
     const response = await this.$axios.get('/api/books')
-    console.log("The data", response.data)
   },
   computed: {
     ...mapGetters('books', ['books'])
