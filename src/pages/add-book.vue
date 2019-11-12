@@ -58,8 +58,9 @@
         </q-card-section>
 
         <q-card-actions>
-          <q-btn flat color="secondary" @click="resetForm">Reset</q-btn>
+          <q-btn flat color="secondary" to="/books">Back</q-btn>
           <q-space></q-space>
+          <q-btn flat color="secondary" @click="resetForm">Reset</q-btn>
           <q-btn flat color="primary" @click="submitForm">Add</q-btn>
         </q-card-actions>
       </q-card>
