@@ -15,25 +15,33 @@ export default {
 
   mutations: {
     addBook(state, book) {
-      console.log("Adding book")
-      return new Promise((resolve, reject) => {
-        try {
-          state.books.push(book)
-          resolve()
-        } catch(err) {
-          reject(err)
-        }
-      })
+      state.books.push(book)
+    },
+    setBooks(state, books) {
+      state.books = books
     }
   },
 
   actions: {
-    addBook({commit}, payload) {
+    async addBook({commit}, payload) {
       const book = {
         isbn: payload.isbn,
         title: payload.title
       }
-      commit('addBook', book)
+      try {
+        const response = await Axios.post('/api/books', book)
+        commit('addBook', response.data.book)
+      } catch (err) {
+        throw err
+      }
+    },
+    async fetchBooks({commit}) {
+      try {
+        const response = await Axios.get('/api/books')
+        commit('setBooks', response.data.books)
+      } catch(err) {
+        throw err
+      }
     }
   }
 }
