@@ -19,6 +19,10 @@ export default {
     },
     setBooks(state, books) {
       state.books = books
+    },
+    removeBook(state, id) {
+      const index = state.books.findIndex(book => book._id === id)
+      state.books.splice(index, 1)
     }
   },
 
@@ -32,6 +36,14 @@ export default {
         const response = await Axios.post('/api/books', book)
         commit('addBook', response.data.book)
       } catch (err) {
+        throw err
+      }
+    },
+    async deleteBook({commit}, id) {
+      try {
+        await Axios.delete('/api/books/' + id)
+        commit('removeBook', id)
+      } catch(err) {
         throw err
       }
     },

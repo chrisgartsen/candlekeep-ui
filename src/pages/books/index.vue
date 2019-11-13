@@ -21,6 +21,13 @@
             </q-td>
           </q-tr>
         </template>
+
+        <template v-slot:no-data="{ icon, message, filter }">
+          <div class="full-width text-primary">
+            No books are present. Why not <router-link to="/books/add" class="table-link">add a new book</router-link>?
+          </div>
+        </template>
+
       </q-table>
     </div>
 
@@ -31,6 +38,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'books',
@@ -47,8 +55,23 @@ export default {
     ...mapGetters('books', ['books'])
   },
   methods: {
+    ...mapActions('books', ['deleteBook']),
     requestDelete(id) {
-      console.log("DELETING", id)
+      this.$q.dialog({
+        title: 'Confirm delete',
+        message: 'Are you sure you want to delete this book?',
+        cancel: true,
+        ok: {
+          color: 'negative',
+          flat: true
+        }
+      }).onOk(() => {
+        try { 
+          this.deleteBook(id)
+        } catch(err) {
+          console.log(err)
+        }
+      })
     }
   },
   async created() {
