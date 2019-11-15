@@ -57,6 +57,17 @@ export default {
         throw err
       }
     },
+    async deleteBooks({commit}, ids) {
+      try {
+        ids.forEach(async (id) => {
+          await Axios.delete('/api/books/' + id)
+          commit('removeBook', id)
+        })
+        this.selected = []
+      } catch (err) {
+        throw err
+      }
+    },
     async fetchBooks({commit}) {
       try {
         const response = await Axios.get('/api/books')

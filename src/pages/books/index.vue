@@ -7,7 +7,7 @@
     </q-breadcrumbs>
     
     <div class="q-mt-xl q-mb-xl">
-      <q-table title="Books" :data="books" :columns="columns" row-key="_id" selection="multiple" :selected.sync="selected">
+      <q-table title="Books" :data="books" :columns="columns" row-key="_id" selection="multiple" :selected.sync="selected" :pagination.sync="pagination">
 
         <template v-slot:body="props">
           <q-tr :props="props">
@@ -62,6 +62,9 @@ export default {
   data() {
     return {
       selected: [],
+      pagination: {
+        rowsPerPage: 30
+      },
       columns: [
         { name: 'isbn', label: 'ISBN', field: 'isbn', align: 'left' },
         { name: 'title', label: 'Title',  field: 'title', align: 'left' },
@@ -79,7 +82,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('books', ['deleteBook']),
+    ...mapActions('books', ['deleteBook', 'deleteBooks']),
     requestDelete(id) {
       this.$q.dialog({
         title: 'Confirm delete',
@@ -109,7 +112,7 @@ export default {
       }).onOk(() => {
         try { 
           const ids = this.selected.map(item => item._id)
-          console.log("Deleting", ids)
+          this.deleteBooks(ids)
         } catch(err) {
           console.log(err)
         }
