@@ -7,16 +7,30 @@
     </q-breadcrumbs>
     
     <div class="q-mt-xl q-mb-xl">
-      <q-table title="Books" :data="books" :columns="columns" row-key="id">
+      <q-table title="Books" :data="books" :columns="columns" row-key="_id" selection="multiple" :selected.sync="selected">
+
         <template v-slot:body="props">
           <q-tr :props="props">
+            <q-td auto-width>
+              <q-checkbox v-model="props.selected" />
+            </q-td>
             <q-td key="isbn" :props="props">
               {{ props.row.isbn }}
             </q-td>
             <q-td key="title" :props="props">
               {{ props.row.title }}
             </q-td>
+            <q-td key="author" :props="props">
+              {{ props.row.author }}
+            </q-td>
+            <q-td key="genre" :props="props">
+              {{ props.row.genre }}
+            </q-td>
+            <q-td key="language" :props="props">
+              {{ props.row.language }}
+            </q-td>
             <q-td key="actions" :props="props">
+              <q-btn flat color="primary" icon="edit" :to="{ name: 'books/edit', params: { id: props.row._id }}" />              
               <q-btn flat color="primary" icon="delete" @click="requestDelete(props.row._id)" />
             </q-td>
           </q-tr>
@@ -28,9 +42,12 @@
           </div>
         </template>
 
+        <template v-slot:bottom>
+          <q-btn flat dense color="primary" label="Delete selected" v-if="showDeleteAll" @click="requestDeleteAll" />
+        </template>
+
       </q-table>
     </div>
-
     <q-btn label="Add book" to="/books/add" color="primary" />
 
   </q-page>
@@ -44,15 +61,22 @@ export default {
   name: 'books',
   data() {
     return {
+      selected: [],
       columns: [
         { name: 'isbn', label: 'ISBN', field: 'isbn', align: 'left' },
         { name: 'title', label: 'Title',  field: 'title', align: 'left' },
+        { name: 'author', label: 'Author',  field: 'author', align: 'left' },
+        { name: 'genre', label: 'Genre',  field: 'genre', align: 'left' },
+        { name: 'language', label: 'Language',  field: 'language', align: 'left' },
         { name: 'actions', label: 'Actions'}
       ],
     }
   },
   computed: {
-    ...mapGetters('books', ['books'])
+    ...mapGetters('books', ['books']),
+    showDeleteAll() {
+      return this.selected.length > 0
+    }
   },
   methods: {
     ...mapActions('books', ['deleteBook']),
@@ -68,6 +92,24 @@ export default {
       }).onOk(() => {
         try { 
           this.deleteBook(id)
+        } catch(err) {
+          console.log(err)
+        }
+      })
+    },
+    requestDeleteAll() {
+      this.$q.dialog({
+        title: 'Confirm delete',
+        message: 'Are you sure you want to all of these books?',
+        cancel: true,
+        ok: {
+          color: 'negative',
+          flat: true
+        }
+      }).onOk(() => {
+        try { 
+          const ids = this.selected.map(item => item._id)
+          console.log("Deleting", ids)
         } catch(err) {
           console.log(err)
         }

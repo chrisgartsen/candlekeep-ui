@@ -5,8 +5,9 @@ const routes = [
     children: [
       { path: '', component: () => import('pages/index.vue') },
       { path: '/login', component: () => import('pages/login.vue') },
-      { path: '/books', component: () => import('pages/books/index.vue'), meta: { requiresAuth: true } },
-      { path: '/books/add', component: () => import('pages/books/create.vue'), meta: { requiresAuth: true } }
+      { path: '/books', name: 'books', component: () => import('pages/books/index.vue'), meta: { requiresAuth: true }},
+      { path: '/books/add', name: 'books/add', component: () => import('pages/books/create.vue'), meta: { requiresAuth: true }},
+      { path: '/books/:id', name: 'books/edit', component: () => import('pages/books/edit.vue'), meta: { requiresAuth: true }, props: true}
     ]
   }
 ]

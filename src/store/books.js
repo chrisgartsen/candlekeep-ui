@@ -27,10 +27,17 @@ export default {
   },
 
   actions: {
-    async addBook({commit}, payload) {
+    async createBook({commit}, payload) {
       const book = {
         isbn: payload.isbn,
-        title: payload.title
+        title: payload.title,
+        author: payload.author,
+        publisher: payload.publisher,
+        genre: payload.genre,
+        language: payload.language,
+        publishedDate: payload.publishedDate,
+        description: payload.description,
+        thumbnail: payload.thumbnail
       }
       try {
         const response = await Axios.post('/api/books', book)
