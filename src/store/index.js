@@ -2,9 +2,10 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import layout from './layout'
-import auth   from './auth'
-import isbn   from './isbn'
-import books  from './books'
+import auth from './auth'
+import isbn from './isbn'
+import books from './books'
+import authors from './authors'
 
 Vue.use(Vuex)
 
@@ -14,7 +15,8 @@ export default function () {
       layout,
       auth,
       isbn,
-      books
+      books,
+      authors
     },
 
     strict: process.env.DEV

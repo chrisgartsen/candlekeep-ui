@@ -10,6 +10,14 @@
             <q-item-label>Books</q-item-label>
           </q-item-section>
         </q-item>
+        <q-item clickable to="/authors">
+          <q-item-section avatar>
+            <q-icon name="people" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Authors</q-item-label>
+          </q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
 </template>

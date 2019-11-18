@@ -1,7 +1,6 @@
 <template>
   <q-page class="flex flex-center">
 
-Token {{ token }}
   </q-page>
 </template>
 
