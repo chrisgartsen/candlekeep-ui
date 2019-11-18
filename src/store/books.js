@@ -43,8 +43,7 @@ export default {
   actions: {
     async createBook({rootGetters}, payload) {
       const book = buildBook(payload)
-      const userId = rootGetters['auth/userId']
-      book.user = userId
+      book.user = rootGetters['auth/userId']
       try {
         await Axios.post('/api/books', book)
       } catch (err) {
@@ -80,16 +79,17 @@ export default {
     },
     async getBook({}, id) {
       try {
-        // @TODO - instead retrieve the book from the vuex array?
         const response = await Axios.get('/api/books/' + id)
+        console.log("The response", response.data)
         return response.data.book
       } catch (error) {
         throw error
       }
     },
-    async updateBook({}, payload) {
+    async updateBook({ rootGetters }, payload) {
       // No need to update the book array, since it will be refreshed when returning to the books index page
       const book = buildBook(payload)
+      book.user = rootGetters['auth/userId']
       try {
         await Axios.put('/api/books/' + payload.id, book)
       } catch(error) {
