@@ -41,8 +41,10 @@ export default {
   },
 
   actions: {
-    async createBook({}, payload) {
+    async createBook({rootGetters}, payload) {
       const book = buildBook(payload)
+      const userId = rootGetters['auth/userId']
+      book.user = userId
       try {
         await Axios.post('/api/books', book)
       } catch (err) {
