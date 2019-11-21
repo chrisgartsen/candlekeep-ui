@@ -12,7 +12,7 @@
             <q-td key="name" :props="props">{{ props.row.name }} </q-td>
             <q-td key="actions" :props="props">
               <q-btn flat color="primary" icon="edit" />              
-              <q-btn flat color="primary" icon="delete"/>
+              <q-btn flat color="primary" icon="delete" @click="requestDelete(props.row._id)" />
             </q-td>
           </q-tr>
         </template>
@@ -33,11 +33,7 @@
         </q-card-section>
 
         <q-card-section>
-          <q-form
-            class="q-gutter-md"
-            @submit.prevent="submitForm"
-            @keyup.enter="submitForm"
-          >
+          <q-form class="q-gutter-md" @submit.prevent="submitForm" @keyup.enter="submitForm">
             <div class="row">
               <q-input
                 class="col"
@@ -92,7 +88,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('authors', ['create', 'fetchAll']),
+    ...mapActions('authors', ['create', 'fetchAll', 'delete']),
     showDialog() {
       this.dialog = true;
     },
@@ -106,6 +102,23 @@ export default {
     resetForm() {
       this.name = ''
       this.$v.$reset()
+    },
+    requestDelete(id) {
+      this.$q.dialog({
+        title: 'Confirm delete',
+        message: 'Are you sure you want to delete this author?',
+        cancel: true,
+        ok: {
+          color: 'negative',
+          flat: true
+        }
+      }).onOk(() => {
+        try { 
+          this.delete(id)
+        } catch(err) {
+          console.log(err)
+        }
+      })
     }
   },
   created() {

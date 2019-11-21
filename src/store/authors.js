@@ -17,6 +17,10 @@ export default {
     add(state, author) {
       state.authors.push(author)
     },
+    remove(state, id) {
+      const index = state.authors.findIndex(author => author._id === id)
+      state.authors.splice(index, 1)
+    },  
     setAll(state, authors) {
       state.authors = authors
     }
@@ -31,13 +35,20 @@ export default {
         throw err
       }
     },
-
     async create({ commit, rootGetters }, payload) {
       const userId = rootGetters['auth/userId']
       try {
         const response = await Axios.post('/api/authors', { name: payload.name, user: userId })
-        commit('add', response.data)
+        commit('add', response.data.author)
       } catch (err) {
+        throw err
+      }
+    },
+    async delete({ commit }, id) {
+      try {
+        await Axios.delete('/api/authors/' + id)
+        commit('remove', id)
+      } catch(err) {
         throw err
       }
     }
