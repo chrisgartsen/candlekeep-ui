@@ -6,9 +6,13 @@
     </q-breadcrumbs>
 
     <div class="q-mt-xl q-mb-xl row">
-      <q-table class="col-4 offset-4" title="Authors" :data="authors" :columns="columns" row-key="_id" :pagination.sync="pagination">
+      <q-table class="col-4 offset-4" title="Authors" selection="multiple" :selected.sync="selected"
+              :data="authors" :columns="columns" row-key="_id" :pagination.sync="pagination">
         <template v-slot:body="props">
           <q-tr :props="props">
+            <q-td auto-width>
+              <q-checkbox v-model="props.selected" />
+            </q-td>
             <q-td key="name" :props="props">{{ props.row.name }} </q-td>
             <q-td key="actions" :props="props">
               <q-btn flat color="primary" icon="edit" />              
@@ -16,6 +20,11 @@
             </q-td>
           </q-tr>
         </template>
+
+        <template v-slot:bottom>
+          <q-btn flat dense color="primary" label="Delete selected" v-if="showDeleteAll" />
+        </template>
+
       </q-table>
     </div>
     <div class="row">
@@ -65,6 +74,7 @@ export default {
   data() {
     return {
       dialog: false,
+      selected: [],
       name: "",
       pagination: {
         rowsPerPage: 30
@@ -82,7 +92,9 @@ export default {
   },
   computed: {
     ...mapGetters("authors", ["authors"]),
-
+    showDeleteAll() {
+      return this.selected.length > 0
+    },
     nameError() {
       if(!this.$v.name.required) return "Field is required"
     }

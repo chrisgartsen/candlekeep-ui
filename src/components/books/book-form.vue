@@ -20,7 +20,9 @@
         </div>
         <div class="row">
           <div class="col-6 q-gutter-md">
-            <q-input outlined label="Author" v-model="bookData.author" />
+          
+            <q-select outlined v-model="bookData.author" :options="authors" option-label="name" option-value="_id" label="Author" new-value-mode="add" />
+
             <q-input outlined label="Genre" v-model="bookData.genre" />
             <q-input outlined label="Language" v-model="bookData.language"/>
           </div>
@@ -47,7 +49,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 
 export default {
@@ -82,6 +84,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('authors', ['authors']),
     hasIsbnError() {
       return !!this.isbnError
     },

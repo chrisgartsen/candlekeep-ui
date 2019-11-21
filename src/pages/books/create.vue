@@ -20,6 +20,13 @@ export default {
   name: 'create-book',
   components: {
     bookForm
+  },
+  async created() {
+    try {
+      await this.$store.dispatch('authors/fetchAll')
+    } catch(err) {
+      console.log(err)
+    }
   }
 }
 </script>
