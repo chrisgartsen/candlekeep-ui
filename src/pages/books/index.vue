@@ -21,7 +21,7 @@
               {{ props.row.title }}
             </q-td>
             <q-td key="author" :props="props">
-              {{ props.row.author }}
+              {{ props.row.author ? props.row.author.name : "" }}
             </q-td>
             <q-td key="genre" :props="props">
               {{ props.row.genre }}

@@ -9,20 +9,21 @@
       </q-inner-loading>
       <q-form class="q-gutter-md" @submit.prevent="submitForm" @keyup.enter="submitForm"> 
         <div class="row">
-          <q-input outlined label="ISBN" class="col-6" v-model="bookData.isbn" @blur="fetchISBN" :error="hasIsbnError" :error-message="isbnError">
+          <q-input outlined label="ISBN" class="col-6" v-model="bookData.isbn" @blur="fetchISBN" :error="hasIsbnError" :error-message="isbnError" hide-bottom-space >
             <template v-slot:after>
               <q-btn round dense flat icon="refresh" @click="fetchISBN" />
             </template>
           </q-input>
         </div>  
         <div class="row">
-          <q-input outlined label="Title" class="col" v-model="bookData.title" @blur="$v.bookData.title.$touch" :error="$v.bookData.title.$error" :error-message="titleError"/>
+          <q-input outlined label="Title" class="col" v-model="bookData.title" @blur="$v.bookData.title.$touch" :error="$v.bookData.title.$error" :error-message="titleError" hide-bottom-space/>
         </div>
         <div class="row">
           <div class="col-6 q-gutter-md">
           
-            <q-select outlined v-model="bookData.author" :options="authors" option-label="name" option-value="_id" label="Author" new-value-mode="add" />
-
+            <q-select outlined v-model="bookData.author" bottom-slots hide-bottom-space :options="authors" option-label="name" option-value="_id" label="Author" new-value-mode="add" >
+              <template v-slot:hint v-if="showAuthorIsNew"> {{ authorIsNew}} </template>
+            </q-select>
             <q-input outlined label="Genre" v-model="bookData.genre" />
             <q-input outlined label="Language" v-model="bookData.language"/>
           </div>
@@ -89,11 +90,21 @@ export default {
       return !!this.isbnError
     },
     titleError() {
-      if(!this.$v.bookData.title.required) return "Field is required"
+      if(!this.$v.bookData.title.required) return 'Field is required'
       return ''
     },
     formTitle() {
-      return this.id ? "Edit book" : "Add book"
+      return this.id ? 'Edit book' : 'Add book'
+    },
+    authorIsNew() {
+      if(this.showAuthorIsNew) {
+        return 'New author, will be created on save'
+      } else {
+        return ''
+      }
+    },
+    showAuthorIsNew() {
+      return this.bookData.author && !this.bookData.author._id
     }
   },
   methods: {

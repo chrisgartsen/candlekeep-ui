@@ -1,16 +1,39 @@
 import Axios from 'axios' 
 
+const buildAuthor = (payload) => {
+  let author
+
+  console.log("Building author", payload)
+
+  if(typeof payload === 'object') {
+    console.log("An object")
+    author = {
+      _id: payload._id,
+      name: payload.name
+    }
+  }
+
+  if(typeof payload === 'string') {
+    console.log("A string")
+    author = {
+      name: payload
+    }
+  }
+  console.log("The created author", author)
+  return author
+}
+
 const buildBook = (payload) => {
   return {
-    isbn: payload.isbn,
+    isbn: payload.isbn ? payload.isbn : undefined,
     title: payload.title,
-    author: payload.author,
-    publisher: payload.publisher,
-    genre: payload.genre,
-    language: payload.language,
-    publishedDate: payload.publishedDate,
-    description: payload.description,
-    thumbnail: payload.thumbnail
+    author: payload.author? buildAuthor(payload.author) : undefined,
+    publisher: payload.publisher ? payload.publisher : undefined,
+    genre: payload.genre ? payload.genre : undefined,
+    language: payload.language ? payload.language : undefined,
+    publishedDate: payload.publishedDate ? payload.publishedDate : undefined,
+    description: payload.description ? payload.description : undefined,
+    thumbnail: payload.thumbnail ? payload.thumbnail : undefined
   }
 }
 
@@ -42,6 +65,7 @@ export default {
 
   actions: {
     async createBook({rootGetters}, payload) {
+      console.log("Creating book", payload)
       const book = buildBook(payload)
       book.user = rootGetters['auth/userId']
       try {
@@ -80,7 +104,6 @@ export default {
     async getBook({}, id) {
       try {
         const response = await Axios.get('/api/books/' + id)
-        console.log("The response", response.data)
         return response.data.book
       } catch (error) {
         throw error
