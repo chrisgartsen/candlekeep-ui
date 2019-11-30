@@ -2,7 +2,7 @@
   <q-page>
 
     <div class="row">
-      <q-card class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-4 offset-lg-4 q-mt-xl">
+      <q-card class="col-12 col-sm-8 offset-sm-2 col-md-4 offset-md-4 col-lg-2 offset-lg-5 q-mt-xl">
         <q-card-section>
           <h2 v-if="!error" class="text-h6 text-primary">Login</h2>
           <h2 v-if="error" class="text-h6 text-negative">Login Failed</h2>
