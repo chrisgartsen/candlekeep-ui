@@ -20,7 +20,6 @@
         </div>
         <div class="row">
           <div class="col-6 q-gutter-md">
-          
             <q-select outlined v-model="bookData.author" bottom-slots hide-bottom-space :options="authors" option-label="name" option-value="_id" label="Author" new-value-mode="add" >
               <template v-slot:hint v-if="showAuthorIsNew"> {{ authorIsNew}} </template>
             </q-select>
@@ -65,7 +64,7 @@ export default {
       bookData: {
         isbn: '',
         title: '',
-        author: '',
+        author: null,
         publisher: '',
         publishedDate: '',
         genre: '',
@@ -109,6 +108,7 @@ export default {
   },
   methods: {
     ...mapActions('isbn', ['fetchBook']),
+    ...mapActions('authors', ['findAuthor']),
     ...mapActions('books', ['createBook', 'updateBook', 'getBook']),
     async submitForm() {
       this.$v.$touch()
@@ -162,9 +162,11 @@ export default {
       this.bookData.description = ''
       this.isbnError = null
     },
-    setBookData(bookData) {
+    async setBookData(bookData) {
+      const author = await this.findAuthor(bookData.author.name)
+
       this.bookData.title = bookData.title
-      this.bookData.author = bookData.author.name
+      this.bookData.author = author ? author : bookData.author.name
       this.bookData.publisher = bookData.publisher.name
       this.bookData.publishedDate = bookData.publishedDate
       this.bookData.genre = bookData.genre.name

@@ -27,6 +27,13 @@ export default {
   },
 
   actions: {
+    findAuthor({getters}, name) {
+      try {
+        return getters.authors.find(a => a.name === name)
+      } catch(err) {
+        console.log(err)
+      }
+    },
     async fetchAll({ commit }) {
       try {
         const response = await Axios.get('/api/authors')
