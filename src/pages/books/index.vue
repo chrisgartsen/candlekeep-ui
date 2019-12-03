@@ -42,8 +42,9 @@
           </div>
         </template>
 
-        <template v-slot:bottom>
-          <q-btn flat dense color="primary" label="Delete selected" v-if="showDeleteAll" @click="requestDeleteAll" />
+        <template v-slot:bottom v-if="showAllButttons">
+          <q-btn flat dense color="primary" label="Delete selected" @click="requestDeleteAll" class="q-mr-xl" />
+          <q-btn flat dense color="primary" label="Update selected" />
         </template>
 
       </q-table>
@@ -77,7 +78,7 @@ export default {
   },
   computed: {
     ...mapGetters('books', ['books']),
-    showDeleteAll() {
+    showAllButttons() {
       return this.selected.length > 0
     }
   },
@@ -103,7 +104,7 @@ export default {
     requestDeleteAll() {
       this.$q.dialog({
         title: 'Confirm delete',
-        message: 'Are you sure you want to all of these books?',
+        message: 'Are you sure you want to delete all of these books?',
         cancel: true,
         ok: {
           color: 'negative',
