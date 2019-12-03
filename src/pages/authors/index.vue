@@ -115,7 +115,7 @@ export default {
       this.name = ''
       this.$v.$reset()
     },
-    requestDelete(ids, message) {
+    requestDelete(items, message) {
       this.$q.dialog({
         title: 'Confirm delete',
         message: message,
@@ -124,55 +124,21 @@ export default {
           color: 'negative',
           flat: true
         }
-      }).onOk(() => {
-        console.log("To delete", ids)
+      }).onOk(async () => {
         try { 
-          const ids = this.selected.map(item => item._id)
-          console.log("Raw table", ids)
-          this.deleteMultiple(ids)
+          const ids = items.map(item => item._id)
+          await this.deleteMultiple(ids)
+          this.selected = []
         } catch(err) {
           console.log(err)
         }
       })
     },
     requestDeleteOne(id) {
-      console.log("Deleting 1")
       this.requestDelete([{_id: id}], 'Are you sure you want to delete this author?')
-      console.log("Deleting 2")
-      // this.$q.dialog({
-      //   title: 'Confirm delete',
-      //   message: 'Are you sure you want to delete this author?',
-      //   cancel: true,
-      //   ok: {
-      //     color: 'negative',
-      //     flat: true
-      //   }
-      // }).onOk(() => {
-      //   try { 
-      //     this.delete(id)
-      //   } catch(err) {
-      //     console.log(err)
-      //   }
-      // })
     },
     requestDeleteMultiple() {
       this.requestDelete(this.selected, 'Are you sure you want to delete all of these authors?')
-      // this.$q.dialog({
-      //   title: 'Confirm delete',
-      //   message: 'Are you sure you want to delete all of these authors?',
-      //   cancel: true,
-      //   ok: {
-      //     color: 'negative',
-      //     flat: true
-      //   }
-      // }).onOk(() => {
-      //   try { 
-      //     const ids = this.selected.map(item => item._id)
-      //     this.deleteMultiple(ids)
-      //   } catch(err) {
-      //     console.log(err)
-      //   }
-      // })
     }
   },
   created() {
