@@ -104,7 +104,7 @@ export default {
     requestDeleteAll() {
       this.$q.dialog({
         title: 'Confirm delete',
-        message: 'Are you sure you want to all of these books?',
+        message: 'Are you sure you want to delete all of these books?',
         cancel: true,
         ok: {
           color: 'negative',

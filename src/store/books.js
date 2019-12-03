@@ -88,7 +88,6 @@ export default {
           await Axios.delete('/api/books/' + id)
           commit('removeBook', id)
         })
-        this.selected = []
       } catch (err) {
         throw err
       }

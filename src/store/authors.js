@@ -51,7 +51,16 @@ export default {
       } catch(err) {
         throw err
       }
+    },
+    async deleteMultiple({commit}, ids) {
+      try {
+        ids.forEach(async (id) => {
+          await Axios.delete('/api/authors/' + id)
+          commit('remove',id)
+        });
+      } catch(err) {
+        throw err
+      }
     }
   }
-
 }

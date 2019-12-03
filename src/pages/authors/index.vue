@@ -16,13 +16,13 @@
             <q-td key="name" :props="props">{{ props.row.name }} </q-td>
             <q-td key="actions" :props="props">
               <q-btn flat color="primary" icon="edit" />              
-              <q-btn flat color="primary" icon="delete" @click="requestDelete(props.row._id)" />
+              <q-btn flat color="primary" icon="delete" @click="requestDeleteOne(props.row._id)" />
             </q-td>
           </q-tr>
         </template>
 
         <template v-slot:bottom>
-          <q-btn flat dense color="primary" label="Delete selected" v-if="showDeleteAll" />
+          <q-btn flat dense color="primary" label="Delete selected" v-if="showDeleteAll" @click="requestDeleteMultiple" />
         </template>
 
       </q-table>
@@ -100,7 +100,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('authors', ['create', 'fetchAll', 'delete']),
+    ...mapActions('authors', ['create', 'fetchAll', 'delete', 'deleteMultiple']),
     showDialog() {
       this.dialog = true;
     },
@@ -115,22 +115,64 @@ export default {
       this.name = ''
       this.$v.$reset()
     },
-    requestDelete(id) {
+    requestDelete(ids, message) {
       this.$q.dialog({
         title: 'Confirm delete',
-        message: 'Are you sure you want to delete this author?',
+        message: message,
         cancel: true,
         ok: {
           color: 'negative',
           flat: true
         }
       }).onOk(() => {
+        console.log("To delete", ids)
         try { 
-          this.delete(id)
+          const ids = this.selected.map(item => item._id)
+          console.log("Raw table", ids)
+          this.deleteMultiple(ids)
         } catch(err) {
           console.log(err)
         }
       })
+    },
+    requestDeleteOne(id) {
+      console.log("Deleting 1")
+      this.requestDelete([{_id: id}], 'Are you sure you want to delete this author?')
+      console.log("Deleting 2")
+      // this.$q.dialog({
+      //   title: 'Confirm delete',
+      //   message: 'Are you sure you want to delete this author?',
+      //   cancel: true,
+      //   ok: {
+      //     color: 'negative',
+      //     flat: true
+      //   }
+      // }).onOk(() => {
+      //   try { 
+      //     this.delete(id)
+      //   } catch(err) {
+      //     console.log(err)
+      //   }
+      // })
+    },
+    requestDeleteMultiple() {
+      this.requestDelete(this.selected, 'Are you sure you want to delete all of these authors?')
+      // this.$q.dialog({
+      //   title: 'Confirm delete',
+      //   message: 'Are you sure you want to delete all of these authors?',
+      //   cancel: true,
+      //   ok: {
+      //     color: 'negative',
+      //     flat: true
+      //   }
+      // }).onOk(() => {
+      //   try { 
+      //     const ids = this.selected.map(item => item._id)
+      //     this.deleteMultiple(ids)
+      //   } catch(err) {
+      //     console.log(err)
+      //   }
+      // })
     }
   },
   created() {
