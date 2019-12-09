@@ -6,30 +6,15 @@
     </q-breadcrumbs>
 
     <div class="q-mt-xl q-mb-xl row">
-      <q-table class="col-4 offset-4" title="Authors" selection="multiple" :selected.sync="selected"
-              :data="authors" :columns="columns" row-key="_id" :pagination.sync="pagination">
-        <template v-slot:body="props">
-          <q-tr :props="props">
-            <q-td auto-width>
-              <q-checkbox v-model="props.selected" />
-            </q-td>
-            <q-td key="name" :props="props">{{ props.row.name }} </q-td>
-            <q-td key="actions" :props="props">
-              <q-btn flat color="primary" icon="edit" />              
-              <q-btn flat color="primary" icon="delete" @click="requestDeleteOne(props.row._id)" />
-            </q-td>
-          </q-tr>
-        </template>
-
-        <template v-slot:bottom>
-          <q-btn flat dense color="primary" label="Delete selected" v-if="showDeleteAll" @click="requestDeleteMultiple" />
-        </template>
-
-      </q-table>
+      <authors-list 
+        :authors="authors" 
+        @requestDeleteOne="requestDeleteOne"
+        @requestDeleteMultiple="requestDeleteMultiple" 
+        @showDialogForEdit="showDialogForEdit" />
     </div>
     <div class="row">
       <div class="col offset-4">
-        <q-btn label="Add author" color="primary" @click="showDialog" />
+        <q-btn label="Add author" color="primary" @click="showDialogForCreate" />
       </div>
     </div>
 
@@ -69,21 +54,20 @@
 import { mapGetters, mapActions } from "vuex";
 import { required } from "vuelidate/lib/validators";
 
+import authorsList from 'components/authors/authors-list'
+
 export default {
   name: "authors",
+  components: {
+    authorsList
+  },
   data() {
     return {
       dialog: false,
       selected: [],
-      name: "",
-      pagination: {
-        rowsPerPage: 30
-      },
-      columns: [     
-        { name: 'name', label: 'Name', field: 'name', align: 'left' },
-        { name: 'actions', label: '' }
-      ]
-    };
+      id: null,
+      name: ""
+    }
   },
   validations: {
     name: {
@@ -92,30 +76,36 @@ export default {
   },
   computed: {
     ...mapGetters("authors", ["authors"]),
-    showDeleteAll() {
-      return this.selected.length > 0
-    },
     nameError() {
       if(!this.$v.name.required) return "Field is required"
     }
   },
   methods: {
-    ...mapActions('authors', ['create', 'fetchAll', 'delete', 'deleteMultiple']),
-    showDialog() {
+    ...mapActions('authors', ['submit', 'fetchAll', 'fetchAuthor', 'deleteMultiple']),
+    showDialogForCreate() {
       this.dialog = true;
+    },
+    async showDialogForEdit(id) {
+      const author = await this.fetchAuthor(id)
+      if(author) {
+        this.id = author._id
+        this.name = author.name
+        this.dialog = true
+      }
     },
     submitForm() {
       this.$v.$touch()
       if(!this.$v.$error) {
-        this.create({ name: this.name })
+        this.submit({ id: this.id, name: this.name })
         this.dialog = false;
       }
     },
     resetForm() {
+      this.id = null
       this.name = ''
       this.$v.$reset()
     },
-    requestDelete(items, message) {
+    requestDelete(ids, message) {
       this.$q.dialog({
         title: 'Confirm delete',
         message: message,
@@ -126,20 +116,19 @@ export default {
         }
       }).onOk(async () => {
         try { 
-          const ids = items.map(item => item._id)
           await this.deleteMultiple(ids)
-          this.selected = []
+          ids = []
         } catch(err) {
           console.log(err)
         }
       })
     },
     requestDeleteOne(id) {
-      this.requestDelete([{_id: id}], 'Are you sure you want to delete this author?')
+      this.requestDelete([id], 'Are you sure you want to delete this author?')
     },
-    requestDeleteMultiple() {
-      this.requestDelete(this.selected, 'Are you sure you want to delete all of these authors?')
-    }
+    requestDeleteMultiple(ids) {
+      this.requestDelete(ids, 'Are you sure you want to delete all of these authors?')
+    },
   },
   created() {
     this.fetchAll()
