@@ -18,6 +18,14 @@
             <q-item-label>Authors</q-item-label>
           </q-item-section>
         </q-item>
+        <q-item clickable to="/publishers">
+          <q-item-section avatar>
+            <q-icon name="account_balance" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Publishers</q-item-label>
+          </q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
 </template>
