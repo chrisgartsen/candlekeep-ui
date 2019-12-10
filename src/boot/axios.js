@@ -16,7 +16,9 @@ export default ({ Vue, store, router }) => {
 
   axios.interceptors.response.use(null, (err) => {
 
-    if (err.response.status == 401 && router.history.current.path != '/login') {
+    if(err && !err.response) {
+      router.push('/network-error')
+    } else if (err.response.status == 401 && router.history.current.path != '/login') {
       store.dispatch('auth/logout')
       router.push('/login')
     } else {
@@ -25,5 +27,4 @@ export default ({ Vue, store, router }) => {
   })
 
   Vue.prototype.$axios = axios
-
 }

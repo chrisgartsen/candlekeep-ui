@@ -14,7 +14,8 @@ const routes = [
       { path: '/publishers', name: 'publishers', component: () => import('pages/publishers/index.vue'), meta: { requiresAuth: true }}
 
     ]
-  }
+  },
+  { path: '/network-error', component: () => import('pages/error/network') }
 ]
 
 // Always leave this as last one
