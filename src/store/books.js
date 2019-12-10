@@ -3,10 +3,7 @@ import Axios from 'axios'
 const buildAuthor = (payload) => {
   let author
 
-  console.log("Building author", payload)
-
   if(typeof payload === 'object') {
-    console.log("An object")
     author = {
       _id: payload._id,
       name: payload.name
@@ -14,12 +11,10 @@ const buildAuthor = (payload) => {
   }
 
   if(typeof payload === 'string') {
-    console.log("A string")
     author = {
       name: payload
     }
   }
-  console.log("The created author", author)
   return author
 }
 
@@ -65,7 +60,6 @@ export default {
 
   actions: {
     async createBook({rootGetters}, payload) {
-      console.log("Creating book", payload)
       const book = buildBook(payload)
       book.user = rootGetters['auth/userId']
       try {

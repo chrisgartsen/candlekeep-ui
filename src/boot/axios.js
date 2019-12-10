@@ -13,9 +13,7 @@ export default ({ Vue, store, router }) => {
   });
 
   // Automatically logout the user when a 401 or 403 occurs
-
   axios.interceptors.response.use(null, (err) => {
-
     if(err && !err.response) {
       router.push('/network-error')
     } else if (err.response.status == 401 && router.history.current.path != '/login') {
