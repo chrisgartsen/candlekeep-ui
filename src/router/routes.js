@@ -10,7 +10,9 @@ const routes = [
       { path: '/books/add', name: 'books/add', component: () => import('pages/books/create.vue'), meta: { requiresAuth: true }},
       { path: '/books/:id', name: 'books/edit', component: () => import('pages/books/edit.vue'), meta: { requiresAuth: true }, props: true},
 
-      { path: '/authors', name: 'authors', component: () => import('pages/authors/index.vue'), meta: { requiresAuth: true }}
+      { path: '/authors', name: 'authors', component: () => import('pages/authors/index.vue'), meta: { requiresAuth: true }},
+      { path: '/publishers', name: 'publishers', component: () => import('pages/publishers/index.vue'), meta: { requiresAuth: true }}
+
     ]
   }
 ]

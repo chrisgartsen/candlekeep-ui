@@ -1,4 +1,5 @@
 import Axios from  'axios'
+import Vue from 'vue'
 
 export default {
   namespaced: true,
@@ -23,13 +24,24 @@ export default {
     },  
     setAll(state, authors) {
       state.authors = authors
+    },
+    update(state, author) {
+      const index = state.authors.findIndex(a => a._id === author._id)
+      Vue.set(state.authors, index, author)
     }
   },
 
   actions: {
-    findAuthor({getters}, name) {
+    findAuthor({ getters }, name) {
       try {
         return getters.authors.find(a => a.name === name)
+      } catch(err) {
+        console.log(err)
+      }
+    },
+    fetchAuthor({ getters }, id) {
+      try {
+        return getters.authors.find(a => a._id === id)
       } catch(err) {
         console.log(err)
       }
@@ -42,11 +54,16 @@ export default {
         throw err
       }
     },
-    async create({ commit, rootGetters }, payload) {
+    async submit({ commit, rootGetters }, payload) {
       const userId = rootGetters['auth/userId']
       try {
-        const response = await Axios.post('/api/authors', { name: payload.name, user: userId })
-        commit('add', response.data.author)
+        if(payload.id) {
+          const response = await Axios.put('/api/authors/'+ payload.id, { name: payload.name, user: userId })
+          commit('update', response.data.author)
+        } else {
+          const response = await Axios.post('/api/authors', { name: payload.name, user: userId })
+          commit('add', response.data.author)
+        }
       } catch (err) {
         throw err
       }
