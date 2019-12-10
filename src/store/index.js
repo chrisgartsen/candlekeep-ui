@@ -6,6 +6,7 @@ import auth from './auth'
 import isbn from './isbn'
 import books from './books'
 import authors from './authors'
+import publishers from './publishers'
 
 Vue.use(Vuex)
 
@@ -16,7 +17,8 @@ export default function () {
       auth,
       isbn,
       books,
-      authors
+      authors,
+      publishers
     },
 
     strict: process.env.DEV

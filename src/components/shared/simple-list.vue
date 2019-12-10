@@ -1,6 +1,6 @@
 <template>
-    <q-table class="col-4 offset-4" title="Authors" selection="multiple" :selected.sync="selected"
-          :data="authors" :columns="columns" row-key="_id" :pagination.sync="pagination">
+    <q-table :title="title" selection="multiple" :selected.sync="selected"
+          :data="items" :columns="columns" row-key="_id" :pagination.sync="pagination">
     <template v-slot:body="props">
       <q-tr :props="props">
         <q-td auto-width>
@@ -23,11 +23,15 @@
 
 <script>
 export default {
-  name: 'authors-list',
+  name: 'simple-list',
   props: {
-    authors: {
+    items: {
       required: true,
       type: Array
+    },
+    title: {
+      type: String,
+      default: 'Item list'
     }
   },
   data() {
@@ -49,13 +53,30 @@ export default {
   },
   methods: {
     requestDeleteOne(id) {
-      this.$emit('requestDeleteOne', id)
+      this.requestDelete([id], "Are you sure you want to delete this entry?");
     },
     requestDeleteMultiple() {
       const ids = this.selected.map(item => item._id)
-      this.$emit('requestDeleteMultiple', ids)
+      this.requestDelete(ids, "Are you sure you want to delete all of these entries?");
       this.selected = []
     },
+    requestDelete(ids, message) {
+      this.$q
+        .dialog({
+          title: "Confirm delete",
+          message: message,
+          cancel: true,
+          ok: {
+            color: "negative",
+            flat: true
+          }
+        })
+        .onOk(async () => {
+          this.$emit('deleteItems', ids)
+          ids = []
+        });
+    },
+
     showDialogForEdit(id) {
       this.$emit('showDialogForEdit', id)
     }
