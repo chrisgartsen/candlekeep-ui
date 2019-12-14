@@ -10,6 +10,7 @@
         class="col-4 offset-4"
         :items="publishers"
         title="Publishers"
+        @deleteItems="deletePublishers"
       />
     </div>
 
@@ -54,13 +55,20 @@ export default {
     }
   },
   methods: {
-    ...mapActions('publishers', ['fetchAll', 'submit']),
+    ...mapActions('publishers', ['fetchAll', 'submit', 'deleteMultiple']),
     showDialogForCreate() {
       this.dialog = true
     },
     submitForm(fieldValue) {
       this.submit({ id: this.id, name: fieldValue })
       this.dialog = false;
+    },
+    async deletePublishers(ids) {
+      try {
+        await this.deleteMultiple(ids)
+      } catch (error) {
+        console.log(error)
+      }
     }
   },
   computed: {

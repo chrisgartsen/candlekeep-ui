@@ -18,7 +18,11 @@ export default {
       state.publishers = publishers
     },
     add(state, publisher) {
-      state.publishers.push = publisher
+      state.publishers.push(publisher)
+    },
+    remove(state, id) {
+      const index = state.publishers.findIndex(p => p._id === id)
+      state.publishers.splice(index, 1)
     }
   },
 
@@ -38,12 +42,23 @@ export default {
           name: payload.name,
           user: userId
         })
+
         commit('add', response.data.publisher)
       } catch(err) {
         console.log(err)
         throw err
       }
-      console.log("Submitting", payload)
+    },
+    async deleteMultiple({ commit }, ids) {
+      try {
+        ids.forEach(async(id) => {
+          console.log("Deleting for ", id)
+          await Axios.delete('/api/publishers/'+id)
+          commit('remove', id)
+        });
+      } catch (error) {
+        throw(error)
+      }
     }
   }
 }
