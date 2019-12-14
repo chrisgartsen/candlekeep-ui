@@ -1,4 +1,5 @@
 import Axios from 'axios'
+import Vue from 'vue'
 
 export default {
   namespaced: true,
@@ -23,6 +24,10 @@ export default {
     remove(state, id) {
       const index = state.publishers.findIndex(p => p._id === id)
       state.publishers.splice(index, 1)
+    },
+    update(state, publisher) {
+      const index = state.publishers.findIndex(p => p._id === publisher._id)
+      Vue.set(state.publishers, index, publisher)
     }
   },
 
@@ -35,15 +40,29 @@ export default {
         console.log(err)
       }
     },
+    fetchPublisher({ getters }, id) {
+      try {
+        return getters.publishers.find(p => p._id === id)
+      } catch (error) {
+        throw error
+      }
+    },
     async submit({ commit, rootGetters }, payload) {
       const userId = rootGetters['auth/userId']
       try {
-        const response = await Axios.post('/api/publishers', {
-          name: payload.name,
-          user: userId
-        })
-
-        commit('add', response.data.publisher)
+        if(payload.id) {
+          const response = await Axios.put('/api/publishers/'+ payload.id, {
+            name: payload.name,
+            user: userId            
+          })
+          commit('update', response.data.publisher)
+        } else {
+          const response = await Axios.post('/api/publishers', {
+            name: payload.name,
+            user: userId
+          })
+          commit('add', response.data.publisher)
+        }
       } catch(err) {
         console.log(err)
         throw err

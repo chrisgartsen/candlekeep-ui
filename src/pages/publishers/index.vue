@@ -11,6 +11,7 @@
         :items="publishers"
         title="Publishers"
         @deleteItems="deletePublishers"
+        @showDialogForEdit="showDialogForEdit"
       />
     </div>
 
@@ -55,13 +56,21 @@ export default {
     }
   },
   methods: {
-    ...mapActions('publishers', ['fetchAll', 'submit', 'deleteMultiple']),
+    ...mapActions('publishers', ['fetchAll', 'fetchPublisher','submit', 'deleteMultiple']),
     showDialogForCreate() {
       this.dialog = true
     },
+    async showDialogForEdit(id) {
+      const publisher = await this.fetchPublisher(id)
+      if(publisher) {
+        this.id = publisher._id
+        this.name = publisher.name
+        this.dialog = true
+      }
+    },
     submitForm(fieldValue) {
       this.submit({ id: this.id, name: fieldValue })
-      this.dialog = false;
+      this.dialog = false
     },
     async deletePublishers(ids) {
       try {
@@ -69,19 +78,30 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    resetForm() {
+      this.id = null,
+      this.name = ''
     }
   },
   computed: {
     ...mapGetters('publishers', ['publishers']),
     formTitle() {
-      return this.id ? "Edit author" : "Add author";
+      return this.id ? "Edit author" : "Add author"
     },
     submitButton() {
-      return this.id ? "Update" : "Create";
+      return this.id ? "Update" : "Create"
     }
   },
   created() {
     this.fetchAll()
+  },
+  watch: {
+    dialog(newVal) {
+      if(!newVal) {
+        this.resetForm()
+      }
+    }
   }
 };
 </script>
