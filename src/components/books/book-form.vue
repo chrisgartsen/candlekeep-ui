@@ -31,7 +31,7 @@
           </div>
         </div>  
         <div class="row">
-          <q-input outlined label="Publisher" v-model="bookData.publisher" class="col-6 q-gutter-md"/>
+          <q-select outlined v-model="bookData.publisher" bottom-slots hide-bottom-space :options="publishers" option-label="name" option-value="_id" label="Publisher" new-value-mode="add" class="col-6 q-gutter-md" />
           <q-input outlined label="Published date" v-model="bookData.publishedDate" class="col-4 offset-1" />
         </div>
         <div class="row">
@@ -65,7 +65,7 @@ export default {
         isbn: '',
         title: '',
         author: null,
-        publisher: '',
+        publisher: null,
         publishedDate: '',
         genre: '',
         language: '',
@@ -85,6 +85,7 @@ export default {
   },
   computed: {
     ...mapGetters('authors', ['authors']),
+    ...mapGetters('publishers', ['publishers']),
     hasIsbnError() {
       return !!this.isbnError
     },

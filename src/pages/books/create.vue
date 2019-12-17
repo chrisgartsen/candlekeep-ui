@@ -24,6 +24,7 @@ export default {
   async created() {
     try {
       await this.$store.dispatch('authors/fetchAll')
+      await this.$store.dispatch('publishers/fetchAll')
     } catch(err) {
       console.log(err)
     }
