@@ -21,8 +21,9 @@
         <div class="row">
           <div class="col-6 q-gutter-md">
             <q-select outlined v-model="bookData.author" bottom-slots hide-bottom-space :options="authors" option-label="name" option-value="_id" label="Author" new-value-mode="add" >
-              <template v-slot:hint v-if="showAuthorIsNew"> {{ authorIsNew}} </template>
+              <template v-slot:hint v-if="showAuthorIsNew">{{ authorIsNew}}</template>
             </q-select>
+
             <q-input outlined label="Genre" v-model="bookData.genre" />
             <q-input outlined label="Language" v-model="bookData.language"/>
           </div>
@@ -31,7 +32,9 @@
           </div>
         </div>  
         <div class="row">
-          <q-select outlined v-model="bookData.publisher" bottom-slots hide-bottom-space :options="publishers" option-label="name" option-value="_id" label="Publisher" new-value-mode="add" class="col-6 q-gutter-md" />
+          <q-select outlined v-model="bookData.publisher" bottom-slots hide-bottom-space :options="publishers" option-label="name" option-value="_id" label="Publisher" new-value-mode="add" class="col-6 q-gutter-md">
+            <template v-slot:hint v-if="showPublisherIsNew">{{ publisherIsNew }}</template>
+          </q-select>
           <q-input outlined label="Published date" v-model="bookData.publishedDate" class="col-4 offset-1" />
         </div>
         <div class="row">
@@ -97,19 +100,22 @@ export default {
       return this.id ? 'Edit book' : 'Add book'
     },
     authorIsNew() {
-      if(this.showAuthorIsNew) {
-        return 'New author, will be created on save'
-      } else {
-        return ''
-      }
+      return this.showAuthorIsNew ? 'New author, will be created on save' : ''
+    },
+    publisherIsNew() {
+      return this.showPublisherIsNew ? 'New publisher, will be created on save' : ''
     },
     showAuthorIsNew() {
       return this.bookData.author && !this.bookData.author._id
+    },
+    showPublisherIsNew() {
+      return this.bookData.publisher && !this.bookData.publisher._id
     }
   },
   methods: {
     ...mapActions('isbn', ['fetchBook']),
     ...mapActions('authors', ['findAuthor']),
+    ...mapActions('publishers', ['findPublisher']),
     ...mapActions('books', ['createBook', 'updateBook', 'getBook']),
     async submitForm() {
       this.$v.$touch()
@@ -165,10 +171,11 @@ export default {
     },
     async setBookData(bookData) {
       const author = await this.findAuthor(bookData.author.name)
+      const publisher = await this.findPublisher(bookData.publisher.name)
 
       this.bookData.title = bookData.title
       this.bookData.author = author ? author : bookData.author.name
-      this.bookData.publisher = bookData.publisher.name
+      this.bookData.publisher = publisher ? publisher : bookData.publisher.name
       this.bookData.publishedDate = bookData.publishedDate
       this.bookData.genre = bookData.genre.name
       this.bookData.language = bookData.language

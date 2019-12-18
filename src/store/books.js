@@ -18,12 +18,32 @@ const buildAuthor = (payload) => {
   return author
 }
 
+const buildSimpleObject = (payload) => {
+  let obj
+
+  if(typeof payload === 'object') {
+    obj = {
+      _id: payload._id,
+      name: payload.name
+    }
+  }
+
+  if(typeof payload === 'string') {
+    obj = {
+      name: payload
+    }
+  }
+  return obj
+}
+
+
+
 const buildBook = (payload) => {
   return {
     isbn: payload.isbn ? payload.isbn : undefined,
     title: payload.title,
     author: payload.author? buildAuthor(payload.author) : undefined,
-    publisher: payload.publisher ? payload.publisher : undefined,
+    publisher: payload.publisher ? buildSimpleObject(payload.publisher) : undefined,
     genre: payload.genre ? payload.genre : undefined,
     language: payload.language ? payload.language : undefined,
     publishedDate: payload.publishedDate ? payload.publishedDate : undefined,
@@ -65,6 +85,7 @@ export default {
       try {
         await Axios.post('/api/books', book)
       } catch (err) {
+        console.log(err.message)
         throw err
       }
     },

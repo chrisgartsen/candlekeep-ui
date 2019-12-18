@@ -23,6 +23,9 @@
             <q-td key="author" :props="props">
               {{ props.row.author ? props.row.author.name : "" }}
             </q-td>
+            <q-td key="publisher" :props="props">
+              {{ props.row.publisher ? props.row.publisher.name : "" }}
+            </q-td>
             <q-td key="genre" :props="props">
               {{ props.row.genre }}
             </q-td>
@@ -70,6 +73,7 @@ export default {
         { name: 'isbn', label: 'ISBN', field: 'isbn', align: 'left' },
         { name: 'title', label: 'Title',  field: 'title', align: 'left' },
         { name: 'author', label: 'Author',  field: 'author', align: 'left' },
+        { name: 'publisher', label: 'Publisher', field: 'publisher', align: 'left' },
         { name: 'genre', label: 'Genre',  field: 'genre', align: 'left' },
         { name: 'language', label: 'Language',  field: 'language', align: 'left' },
         { name: 'actions', label: 'Actions'}
