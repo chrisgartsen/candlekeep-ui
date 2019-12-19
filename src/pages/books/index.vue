@@ -118,6 +118,7 @@ export default {
         try { 
           const ids = this.selected.map(item => item._id)
           this.deleteBooks(ids)
+          this.selected = []
         } catch(err) {
           console.log(err)
         }
