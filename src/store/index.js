@@ -7,6 +7,7 @@ import isbn from './isbn'
 import books from './books'
 import authors from './authors'
 import publishers from './publishers'
+import genres from './genres'
 
 Vue.use(Vuex)
 
@@ -18,7 +19,8 @@ export default function () {
       isbn,
       books,
       authors,
-      publishers
+      publishers,
+      genres
     },
 
     strict: process.env.DEV

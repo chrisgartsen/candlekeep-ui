@@ -2,29 +2,9 @@
     <q-drawer v-model="show" bordered content-class="bg-grey-2">
       <q-list>
         <q-item-label header>Actions</q-item-label>
-        <q-item clickable to="/books">
-          <q-item-section avatar>
-            <q-icon name="menu_book" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Books</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item clickable to="/authors">
-          <q-item-section avatar>
-            <q-icon name="people" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Authors</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item clickable to="/publishers">
-          <q-item-section avatar>
-            <q-icon name="account_balance" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Publishers</q-item-label>
-          </q-item-section>
+        <q-item v-for="item in menuItems" :key="item.label" clickable :to="item.to"> 
+          <q-item-section avatar><q-icon :name="item.icon" /></q-item-section>
+          <q-item-section><q-item-label>{{ item.label }}</q-item-label></q-item-section>
         </q-item>
       </q-list>
     </q-drawer>
@@ -35,7 +15,16 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'page-drawer',
-
+  data() {
+    return {
+      menuItems: [
+        { label: 'Books', icon: "menu_book", to: '/books' },
+        { label: 'Authors', icon: "people", to: '/authors' },
+        { label: 'Publishers', icon: "account_balance", to: '/publishers' },
+        { label: 'Genres', icon: "landscape", to: '/genres' }        
+      ]
+    }
+  },
   computed: {
     ...mapGetters('layout',['showDrawer']),
     ...mapGetters('auth', ['isLoggedIn']),
